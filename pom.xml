@@ -121,16 +121,4 @@
 		</plugins>
 	</build>
 
-	<profiles>
-		<profile>
-			<id>InitialSetup</id>
-			<properties>
-				<testcase.groups>be.ordina.lab.infrastructure.InitialSetupTest</testcase.groups>
-				<testcase.excludeGroups>
-					be.ordina.lab.infrastructure.Lab1Tests,be.ordina.lab.infrastructure.Lab2Tests,be.ordina.lab.infrastructure.Lab4Tests
-				</testcase.excludeGroups>
-			</properties>
-		</profile>
-	</profiles>
-
 </project>
