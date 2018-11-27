@@ -135,4 +135,23 @@ public class TrafficEvent {
     public Integer getSensorValid() {
         return sensorValid;
     }
+
+    @Override
+    public String toString() {
+        return "TrafficEvent{" +
+                "vehicleClass=" + vehicleClass +
+                ", trafficIntensity=" + trafficIntensity +
+                ", vehicleSpeedCalculated=" + vehicleSpeedCalculated +
+                ", vehicleSpeedHarmonical=" + vehicleSpeedHarmonical +
+                ", sensorId='" + sensorId + '\'' +
+                ", sensorDescriptiveId='" + sensorDescriptiveId + '\'' +
+                ", lveNumber=" + lveNumber +
+                ", timeRegistration=" + timeRegistration +
+                ", lastUpdated=" + lastUpdated +
+                ", recentData=" + recentData +
+                ", availableMeetpunt=" + availableMeetpunt +
+                ", sensorDefect=" + sensorDefect +
+                ", sensorValid=" + sensorValid +
+                '}';
+    }
 }
