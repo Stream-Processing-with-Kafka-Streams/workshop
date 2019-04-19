@@ -8,8 +8,8 @@
 	<version>0.0.1-SNAPSHOT</version>
 	<packaging>jar</packaging>
 
-	<name>stream-processing-workshop</name>
-	<description>Stream Processing Workshop</description>
+	<name>stream-processing-workshop-reactive-sender</name>
+	<description>Stream Processing Workshop - Reactive Sender</description>
 
 	<parent>
 		<groupId>org.springframework.boot</groupId>
@@ -33,6 +33,10 @@
 		<dependency>
 			<groupId>org.springframework.cloud</groupId>
 			<artifactId>spring-cloud-starter-stream-kafka</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.cloud</groupId>
+			<artifactId>spring-cloud-stream-reactive</artifactId>
 		</dependency>
 
 		<!-- TEST -->

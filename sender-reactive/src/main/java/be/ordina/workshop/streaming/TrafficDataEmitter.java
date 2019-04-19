@@ -1,6 +1,5 @@
 package be.ordina.workshop.streaming;
 
-import java.util.List;
 import java.util.function.Function;
 
 import generated.traffic.Miv;
@@ -10,10 +9,9 @@ import reactor.util.function.Tuples;
 import be.ordina.workshop.streaming.domain.TrafficEvent;
 
 import org.springframework.cloud.stream.annotation.EnableBinding;
+import org.springframework.cloud.stream.annotation.Output;
 import org.springframework.cloud.stream.messaging.Source;
-import org.springframework.messaging.support.MessageBuilder;
-import org.springframework.scheduling.annotation.EnableScheduling;
-import org.springframework.scheduling.annotation.Scheduled;
+import org.springframework.cloud.stream.reactive.StreamEmitter;
 import org.springframework.stereotype.Component;
 
 /**
@@ -21,30 +19,18 @@ import org.springframework.stereotype.Component;
  */
 @Component
 @EnableBinding(Source.class)
-@EnableScheduling
 public class TrafficDataEmitter {
 
 	private final TrafficDataConverter trafficDataConverter = new TrafficDataConverter();
 	private final TrafficDataRetriever trafficDataRetriever;
-	private final Source source;
 
-	public TrafficDataEmitter(TrafficDataRetriever trafficDataRetriever, Source source) {
+	public TrafficDataEmitter(TrafficDataRetriever trafficDataRetriever) {
 		this.trafficDataRetriever = trafficDataRetriever;
-		this.source = source;
 	}
 
-	@Scheduled(fixedRate = 60_000L)
-	public void sendTrafficEvents() {
-		this.getTrafficDataEventsAsList().stream()
-				.map(trafficEvent -> MessageBuilder.withPayload(trafficEvent).build())
-				.forEach(message -> this.source.output().send(message));
-	}
-
-	private List<TrafficEvent> getTrafficDataEventsAsList() {
-		return this.getTrafficDataEvents().collectList().block();
-	}
-
-	private Flux<TrafficEvent> getTrafficDataEvents() {
+	@StreamEmitter
+	@Output(Source.OUTPUT)
+	public Flux<TrafficEvent> sendTrafficEvents() {
 		return this.trafficDataRetriever.getTrafficData()
 				.map(Miv::getMeetpunt)
 				.flatMapIterable(Function.identity())
