@@ -33,7 +33,7 @@ That data will be chopped into events by the existing, provided code.
 After which you will have to put these new events onto a kafka topic traffic-data
 
 #### Consider the following:
-* Add the spring cloud stream starter for kafka
+* Add the spring cloud stream starter for kafka: `spring-cloud-starter-stream-kafka`
 * Use `enableBinding` to define your output
 * Set the destination of your output to: `traffic-data`
 * Use `Scheduling` to retrieve the traffic data from the external source every minute
@@ -56,7 +56,7 @@ Now we will start using Kafka Streams in order to process the events, so that yo
 Filter out all the cars and print these out.
 
 #### Consider the following:
-* Take in the kafka steams binder
+* Take in the kafka steams binder `spring-cloud-stream-binder-kafka-streams`
 * Define your own custom binding interface
 * Use the methods `.filter()` and `.print()`
 * Set the destination of your new binder
