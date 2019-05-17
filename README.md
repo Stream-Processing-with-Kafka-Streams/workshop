@@ -5,7 +5,7 @@
 2. Get the following [command](http://bit.ly/docker-kafka) so you can get a kafka / zookeeper running locally via docker.
 3. Use maven build to generate some java classes:
 ```
-  > mvn install
+  > mvn clean compile
 ```
 
 ### If you don't have Docker
