@@ -8,7 +8,7 @@ For this we will make use of Spring Cloud Stream.
 #### Consider the following
 
 We will start from the existing project sender, which we will use to read in the data, tansform these into events and put these in a kafka topic.
-* Add the spring cloud stream starter for kafka: `spring-cloud-starter-stream-kafka`
-* Use `enableBinding` to define your output
+* Add the spring cloud stream starter for kafka to your pom.xml: `spring-cloud-starter-stream-kafka`
+* Use `@EnableBinding` to define your output
 * Set the destination of your output to: `traffic-data`
 * Use `Scheduling` to retrieve the traffic data from the external source every minute
