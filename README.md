@@ -31,55 +31,16 @@ These are also the ports used by default by Spring Cloud Stream
 [Send Events to Kafka](lab1.md)
 
 ### Lab 2: consume events from Kafka
-With this exercise we will let you consume your first messages from Kafka by making use of Spring Cloud Stream.
-This is the most basic form of stream processing, your method will be called for every event present on the topic.
-Events will only be consumed from the moment the consumer connected first to your Kafka (at that moment it will register its consumer offset)
-So if you do not see immediate results ... wait a minute.
-
-#### Pay attention to the following:
-* Go to start.spring.io and create a new project, add the following starters:
-    * like
-* Store the generated project as a zipfile.
-
-* Use `enablebinding` to define your input
-* Define a `StreamListener`
-* Set the destination of that listener to: `traffic data`
-* Just take in the events and print them out
+[Consume Events from Kafka](lab2.md)
 
 ### Lab 3: use Kafka Streams, stateless
-Now we will start using Kafka Streams in order to process the events, so that you can make use of all the pre-implemented streaming operations.
-
-Filter out all the cars and print these out.
-
-#### Consider the following:
-* Take in the kafka steams binder `spring-cloud-stream-binder-kafka-streams`
-* Define your own custom binding interface
-* Use the methods `.filter()` and `.print()`
-* Set the destination of your new binder
-* You will need to give up a default binder (because you now have 2 in your config and Spring Cloud Stream does not know which to use when)
+[Use Kafka Streams, stateless](lab3.md)
 
 ### Lab 4: make use of windows
-Windows allow you to analyze your events over a certain timeframe.
-Because often you don't want to see the latest state of a specific datapoint, but more a somewhat averaged output over a certain time window. 
-It also gives your system time to deal with late events, events which happened some time ago but because of the will of the network latency gods did not arrive at the time they occurred.
-
-Because you are now going to convert your events and change its key, you may not forget to provide Kafka Streams with the Serializer / Deserializers it needs to use, the so-called serdes.
-
-#### Consider the following:
-* Make use of `GroupByKey`
-* Define a `SerDe` for your value and your key, you can use the provided implementations to deal with String and JSON.
-* Use count()
-* Use `.toStream()` to convert the kTable output back to a Stream which you can then print out.
+[Use Windows with Kafka Streams](lab4.md)
 
 ### Lab 5: bonus - reactive ingestion
-
-It is also possible to make use of reactive programming within Spring Cloud Stream.
-In this exercise you will update the code of exercise 1 by making it reactive.
-
-#### Consider the following:
-* At the spring cloud stream dependency for reactive
-* Make use of a `StreamEmitter`
-* Use a `SendTo`
+[Send Events Reactively With Spring Cloud Stream](lab5.md)
 
 ### Lab 6: Think about how you would detect a traffic congestion
 Think about how you would tackle the problem.
