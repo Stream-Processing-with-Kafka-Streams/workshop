@@ -49,6 +49,10 @@ Events will only be consumed from the moment the consumer connected first to you
 So if you do not see immediate results ... wait a minute.
 
 #### Pay attention to the following:
+* Go to start.spring.io and create a new project, add the following starters:
+    * like
+* Store the generated project as a zipfile.
+
 * Use `enablebinding` to define your input
 * Define a `StreamListener`
 * Set the destination of that listener to: `traffic data`
