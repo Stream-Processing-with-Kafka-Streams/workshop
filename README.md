@@ -28,7 +28,7 @@ These are also the ports used by default by Spring Cloud Stream
 ## Labs
 
 ### Lab 1: send events to Kafka
-[Send Events to Kafka](../lab1.md)
+[Send Events to Kafka](lab1.md)
 
 ### Lab 2: consume events from Kafka
 With this exercise we will let you consume your first messages from Kafka by making use of Spring Cloud Stream.
