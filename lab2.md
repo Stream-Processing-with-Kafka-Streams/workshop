@@ -11,6 +11,12 @@ So if you do not see immediate results ... wait a minute.
 * Store the generated project as a zipfile.
 
 * Use `enablebinding` to define your input
-* Define a `StreamListener`
-* Set the destination of that listener to: `traffic-data`
+
+Define a `StreamListener`, in this class we will inject a `Sink`, once we have injected this bean we can use this to receive events via the `input` channel.
+
+
+To do this we'll have to specify in our properties file where we want to have our `input` channel bind to.
+Just add `spring.cloud.stream.bindings.input.destination=traffic-data` and we're ready to send the events!
+
+
 * Just take in the events and print them out
