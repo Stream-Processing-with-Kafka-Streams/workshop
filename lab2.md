@@ -6,10 +6,11 @@ So if you do not see immediate results ... wait a minute.
 
 #### Pay attention to the following:
 * Go to start.spring.io and create a new project, add the following starters:
-    * like
+    * Cloud Stream
+    * Spring for Apache Kafka
 * Store the generated project as a zipfile.
 
 * Use `enablebinding` to define your input
 * Define a `StreamListener`
-* Set the destination of that listener to: `traffic data`
+* Set the destination of that listener to: `traffic-data`
 * Just take in the events and print them out
