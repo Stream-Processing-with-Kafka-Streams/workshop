@@ -39,9 +39,6 @@ These are also the ports used by default by Spring Cloud Stream
 ### Lab 4: make use of windows
 [Use Windows with Kafka Streams](lab4.md)
 
-### Lab 5: bonus - reactive ingestion
-[Send Events Reactively With Spring Cloud Stream](lab5.md)
-
-### Lab 6: Think about how you would detect a traffic congestion
+### Lab 5: Think about how you would detect a traffic congestion
 Think about how you would tackle the problem.
 In how many steps would you process your data?
