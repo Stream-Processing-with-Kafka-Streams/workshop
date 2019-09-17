@@ -12,45 +12,44 @@ For this exercise we're going to continue from lab3.
 We will be generating an average speed for a given sensor, so first define a result class which will be used to store the results per window.
 
 ```
-    import com.fasterxml.jackson.annotation.JsonCreator;
-    import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
-    public class Average {
+public class Average {
 
-        private int amountOfCars = 0;
-        private int totalSpeed = 0;
+    private int amountOfCars = 0;
+    private int totalSpeed = 0;
 
-        Average() {
-        }
-
-        @JsonCreator
-        public Average(@JsonProperty("amountOfCars") int amountOfCars,
-                @JsonProperty("totalSpeed") int totalSpeed) {
-            this.amountOfCars = amountOfCars;
-            this.totalSpeed = totalSpeed;
-        }
-
-        public int getAmountOfCars() {
-            return this.amountOfCars;
-        }
-
-        public int getTotalSpeed() {
-            return this.totalSpeed;
-        }
-
-        void addSpeed(int amountOfCars, int speed) {
-            this.amountOfCars += amountOfCars;
-            this.totalSpeed += speed;
-        }
-
-        double average() {
-            if (this.amountOfCars == 0) {
-                return 0;
-            }
-            return this.totalSpeed / this.amountOfCars;
-        }
-
+    Average() {
     }
+
+    @JsonCreator
+    public Average(@JsonProperty("amountOfCars") int amountOfCars,
+            @JsonProperty("totalSpeed") int totalSpeed) {
+        this.amountOfCars = amountOfCars;
+        this.totalSpeed = totalSpeed;
+    }
+
+    public int getAmountOfCars() {
+        return this.amountOfCars;
+    }
+
+    public int getTotalSpeed() {
+        return this.totalSpeed;
+    }
+
+    void addSpeed(int amountOfCars, int speed) {
+        this.amountOfCars += amountOfCars;
+        this.totalSpeed += speed;
+    }
+
+    double average() {
+        if (this.amountOfCars == 0) {
+            return 0;
+        }
+        return this.totalSpeed / this.amountOfCars;
+    }
+}
 ```
 
 As soon as you start to make use of the statefull methods used by Kafka, Kafka Streams will store intermediate results in kafka topics, as you will see being printed out in your log statements.
@@ -105,21 +104,21 @@ Which can be either pretty fast or pretty slow depending on the time of the day.
 The end result should look something like this: 
 
 ```
-    @StreamListener
-	public void consumeEvent(@Input(KStreamSink.INPUT) KStream<String, TrafficEvent> stream) {
-		stream.filter(((key, trafficEvent) -> VehicleClass.CAR == trafficEvent.getVehicleClass()))
-				.selectKey((key, value) -> value.getSensorId())
-				.groupByKey(Serialized.with(Serdes.String(), new JsonSerde<>(TrafficEvent.class)))
-				.windowedBy(TimeWindows.of(120_000L))
-				.aggregate(Average::new, (sensorId, trafficEvent, average) -> {
-					average.addSpeed(trafficEvent.getTrafficIntensity(),
-							trafficEvent.getVehicleSpeedCalculated());
-					return average;
-				}, Materialized.with(Serdes.String(), new JsonSerde<>(Average.class)))
-				.mapValues(Average::average)
-				.toStream()
-				.print(Printed.toSysOut());
-	}
+@StreamListener
+public void consumeEvent(@Input(KStreamSink.INPUT) KStream<String, TrafficEvent> stream) {
+    stream.filter(((key, trafficEvent) -> VehicleClass.CAR == trafficEvent.getVehicleClass()))
+            .selectKey((key, value) -> value.getSensorId())
+            .groupByKey(Serialized.with(Serdes.String(), new JsonSerde<>(TrafficEvent.class)))
+            .windowedBy(TimeWindows.of(120_000L))
+            .aggregate(Average::new, (sensorId, trafficEvent, average) -> {
+                average.addSpeed(trafficEvent.getTrafficIntensity(),
+                        trafficEvent.getVehicleSpeedCalculated());
+                return average;
+            }, Materialized.with(Serdes.String(), new JsonSerde<>(Average.class)))
+            .mapValues(Average::average)
+            .toStream()
+            .print(Printed.toSysOut());
+}
 ```
 
 
