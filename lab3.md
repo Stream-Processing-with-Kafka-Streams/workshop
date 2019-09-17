@@ -30,6 +30,10 @@ public interface KStreamSink {
 
 Notice the `@Input(INPUT)` annotation?
 This will be used as our channel name.
+Add this new interface to the `@EnableBinding` annotation so it looks like this:
+```
+@EnableBinding({ Sink.class, KStreamSink.class })
+```
 Now we need to connect this channel to our topic.
 Add `spring.cloud.stream.bindings.native-input.destination=traffic-data` to your properties.
 You might think that we're done here but do you remember that we set our default binder at the beginning of the exercise?
