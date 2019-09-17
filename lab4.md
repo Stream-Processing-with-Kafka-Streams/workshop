@@ -56,7 +56,7 @@ As soon as you start to make use of the statefull methods used by Kafka, Kafka S
 
 For this exercise we will continue using `@StreamListener` and the `@Input(KstreamSink.INPUT)`, but we are going to change the entire existing implementation.
 
-First filter out all `VehicleClass.CAR` using `.filter((k,v) -> {})`.
+Retain the filter on `VehicleClass.CAR` as for this exercise we also only care about cars.
 
 Then we are going to start with grouping, when grouping Kafka Streams will always group on the key, if you want to group on another value you must first set this.
 
