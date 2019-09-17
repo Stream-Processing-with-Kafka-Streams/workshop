@@ -55,7 +55,7 @@ We will be generating an average speed for a given sensor, so first define a res
 
 As soon as you start to make use of the statefull methods used by Kafka, Kafka Streams will store intermediate results in kafka topics, as you will see being printed out in your log statements.
 
-For this exercise we will continue using `@StreamListener` and the `@Input(KstreamSink.INPUT`, but we are going to change the entire existing implementation.
+For this exercise we will continue using `@StreamListener` and the `@Input(KstreamSink.INPUT)`, but we are going to change the entire existing implementation.
 
 First filter out all `VehicleClass.CAR` using `.filter((k,v) -> {})`.
 
