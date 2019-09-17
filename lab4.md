@@ -5,18 +5,10 @@ It also gives your system time to deal with late events, events which happened s
 
 Because you are now going to convert your events and change its key, you may not forget to provide Kafka Streams with the Serializer / Deserializers it needs to use, the so-called serdes.
 
-#### Consider the following:
-* Make use of `GroupByKey`
-* Define a `SerDe` for your value and your key, you can use the provided implementations to deal with String and JSON.
-* Use count()
-* Use `.toStream()` to convert the kTable output back to a Stream which you can then print out.
-
 
 #### Exercise
 
 For this exercise we're going to continue from lab3.
-
-As soon as you start to make use of the statefull methods used by Kafka, Kafka Streams will store intermediate results in kafka topics, as you will see being printed out in your log statements.
 
 We will be generating an average speed for a given sensor, so first define a result class which will be used to store the results per window.
 
@@ -61,6 +53,8 @@ We will be generating an average speed for a given sensor, so first define a res
 
     }
 ```
+
+As soon as you start to make use of the statefull methods used by Kafka, Kafka Streams will store intermediate results in kafka topics, as you will see being printed out in your log statements.
 
 For this exercise we will continue using `@StreamListener` and the `@Input(KstreamSink.INPUT`, but we are going to change the entire existing implementation.
 
