@@ -8,7 +8,7 @@ So if you do not see immediate results ... wait a minute.
 #### Exercise
 
 For this exercise we're going to visit <a href="https://start.spring.io" target="_blank">start.spring.io</a>.
-You can configure anything what you want, but just make sure that you add `Cloud Stream` and `Spring for Apache Kafka` as dependencies to your project.
+You can configure anything you want, but just make sure that you add `Cloud Stream` and `Spring for Apache Kafka` as dependencies to your project.
 Once you hit generate a new project will be created, zipped and downloaded to your computer.
 Make sure not to delete the zip file if you want to create separate applications for the next labs.
 
