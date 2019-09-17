@@ -63,10 +63,14 @@ Then we are going to start with grouping, when grouping Kafka Streams will alway
 
 Use `.selectKey((k,v) -> new_key)` to select a new key, make the `value.getSensorId` the new key.
 
-Now we have a key and we kan start grouping, on very important aspect you should not forget is to pass along a correct `Serde`.
+Now we have a key and we can start grouping.
+One very *important* aspect you should not forget is to pass along a correct `Serde`.
 A `Serde` is used by Kafka to serialize and deserialize the data you send and retrieve from a topic.
-Spring Cloud Stream automatically converts this to `JsonSerde` or when passing along a `String` to `Serdes.String`, but we will now need to provide this explicetely.
+Spring Cloud Stream automatically converts this to `JsonSerde` or when passing along a `String` to `Serdes.String`, but we will now need to provide this explicitly.
 Use `.groupByKey(Serialized.with(Serdes.String(), new JsonSerde<>(TrafficEvent.class)))` to define a new grouping.
+
+Important is when grouping, that Kafka Streams will write the output to new topics.
+Where your newly defined key will be used to partition data.
 
 Next we are going to define the windowing via `.windowedBy(TimeWindows.off(milliseconds))`, set the milliseconds for 2 minutes.
 
@@ -74,6 +78,7 @@ Now you have defined your windows we can aggregate our results over these window
 An aggregate will always run over a certain key and return a `KTable` as result.
 
 In this aggregate we will make use of the `Average.class` you defined previously, which will be used to group the average speedlimit for all cars passing a certain sensor in a 2 minute window.
+You can see this as the reduce step in the MapReduce paradigm.
 
 The [`<VR> KTable<K,VR> aggregate(Initializer<VR> initializer,Aggregator<? super K,? super V,VR> aggregator)`](https://kafka.apache.org/20/javadoc/org/apache/kafka/streams/kstream/KGroupedStream.html#aggregate-org.apache.kafka.streams.kstream.Initializer-org.apache.kafka.streams.kstream.Aggregator-) always needs an Initializer and an Aggregator.
 
@@ -99,10 +104,9 @@ Which can be either pretty fast or pretty slow depending on the time of the day.
 #### The End Result
 The end result should look something like this: 
 
-`
+```
     @StreamListener
-	public void consumeEvent(@Input(KStreamSink.INPUT)
-			KStream<String, TrafficEvent> stream) {
+	public void consumeEvent(@Input(KStreamSink.INPUT) KStream<String, TrafficEvent> stream) {
 		stream.filter(((key, trafficEvent) -> VehicleClass.CAR == trafficEvent.getVehicleClass()))
 				.selectKey((key, value) -> value.getSensorId())
 				.groupByKey(Serialized.with(Serdes.String(), new JsonSerde<>(TrafficEvent.class)))
@@ -116,7 +120,7 @@ The end result should look something like this:
 				.toStream()
 				.print(Printed.toSysOut());
 	}
-`
+```
 
 
 
