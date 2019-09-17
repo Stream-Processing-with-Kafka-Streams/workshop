@@ -45,7 +45,7 @@ spring.cloud.stream.bindings.native-input.binder=kstream
 Alright, we're all set to create some code again!
 
 In our `TrafficEventReceiver` component we're going to add a new `@StreamListener`.
-You might want to comment out the existing `consumeEvent` method to you don't log the events twice.
+You might want to comment out the implementation of the existing `consumeEvent` method so you don't log the events twice.
 As a starting point we're going to add a new `consumeEvent` method:
 ```
 @StreamListener
