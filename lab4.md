@@ -11,22 +11,6 @@ Because you are now going to convert your events and change its key, you may not
 * Use count()
 * Use `.toStream()` to convert the kTable output back to a Stream which you can then print out.
 
-@StreamListener
-	public void consumeEvent(@Input(KStreamSink.INPUT)
-			KStream<String, TrafficEvent> stream) {
-		stream.filter(((key, trafficEvent) -> VehicleClass.CAR == trafficEvent.getVehicleClass()))
-				.selectKey((key, value) -> value.getSensorId())
-				.groupByKey(Serialized.with(Serdes.String(), new JsonSerde<>(TrafficEvent.class)))
-				.windowedBy(TimeWindows.of(120_000L))
-				.aggregate(Average::new, (sensorId, trafficEvent, average) -> {
-					average.addSpeed(trafficEvent.getTrafficIntensity(),
-							trafficEvent.getVehicleSpeedCalculated());
-					return average;
-				}, Materialized.with(Serdes.String(), new JsonSerde<>(Average.class)))
-				.mapValues(Average::average)
-				.toStream()
-				.print(Printed.toSysOut());
-	}
 
 #### Exercise
 
@@ -78,8 +62,7 @@ We will be generating an average speed for a given sensor, so first define a res
     }
 ```
 
-
-For this exercise we will continue using `@StreamListener` and the `@Input(KstreamSink.INPUT`.
+For this exercise we will continue using `@StreamListener` and the `@Input(KstreamSink.INPUT`, but we are going to change the entire existing implementation.
 
 First filter out all `VehicleClass.CAR` using `.filter((k,v) -> {})`.
 
@@ -92,20 +75,56 @@ A `Serde` is used by Kafka to serialize and deserialize the data you send and re
 Spring Cloud Stream automatically converts this to `JsonSerde` or when passing along a `String` to `Serdes.String`, but we will now need to provide this explicetely.
 Use `.groupByKey(Serialized.with(Serdes.String(), new JsonSerde<>(TrafficEvent.class)))` to define a new grouping.
 
+Next we are going to define the windowing via `.windowedBy(TimeWindows.off(milliseconds))`, set the milliseconds for 2 minutes.
 
- 
+Now you have defined your windows we can aggregate our results over these windows.
+An aggregate will always run over a certain key and return a `KTable` as result.
+
+In this aggregate we will make use of the `Average.class` you defined previously, which will be used to group the average speedlimit for all cars passing a certain sensor in a 2 minute window.
+
+The [`<VR> KTable<K,VR> aggregate(Initializer<VR> initializer,Aggregator<? super K,? super V,VR> aggregator)`](https://kafka.apache.org/20/javadoc/org/apache/kafka/streams/kstream/KGroupedStream.html#aggregate-org.apache.kafka.streams.kstream.Initializer-org.apache.kafka.streams.kstream.Aggregator-) always needs an Initializer and an Aggregator.
+
+The `Initializer` in this case is just `Average::new`.
+
+The `Aggregator` is a method which takes in as parameters the key, value and initialized aggregator class, like `(sensorId, trafficEvent, average) -> {})`
+
+In the method set the average speed `average.addSpeed(trafficEvent.getTrafficIntensity(),trafficEvent.getVehicleSpeedCalculated())` and return the aggregator `return average`.
+
+To conclude the Aggregator we are going to define a third parameter: `Materialized<K,VR,KeyValueStore<org.apache.kafka.common.utils.Bytes,byte[]>> materialized` so we can make sure that the `Average` class will be serialized and deserialized property.
+Add `Materialized.with(Serdes.String(), new JsonSerde<>(Average.class))` as third parameter.
+
+Now that we have created an aggregation we will now retrieve the averages.
+
+Use `.mapValues(Average::average)` to transform the values into the calculated average.
+
+Then we can print out the results by first converting it to a `KStream` with `toStream` and then calling `.print(Printed.toSysOut())`
+
+This should print out the results showing you the average car speed over a 2 minute window on the Belgium highway network.
+Which can be either pretty fast or pretty slow depending on the time of the day.
 
 
-To make it easier, you might want to copy the `be.ordina.workshop.streaming.domain` package from the `sender` application to quickly bootstrap this exercise.
+#### The End Result
+The end result should look something like this: 
 
-Next, let's start with a new `@Component` class named `TrafficEventReceiver`.
-Like with the previous exercise we need to have a binding to our Kafka instance.
-The only difference here is that we're going to use the `org.springframework.cloud.stream.messaging.Sink` interface because we're going to consume the messages.
+`
+    @StreamListener
+	public void consumeEvent(@Input(KStreamSink.INPUT)
+			KStream<String, TrafficEvent> stream) {
+		stream.filter(((key, trafficEvent) -> VehicleClass.CAR == trafficEvent.getVehicleClass()))
+				.selectKey((key, value) -> value.getSensorId())
+				.groupByKey(Serialized.with(Serdes.String(), new JsonSerde<>(TrafficEvent.class)))
+				.windowedBy(TimeWindows.of(120_000L))
+				.aggregate(Average::new, (sensorId, trafficEvent, average) -> {
+					average.addSpeed(trafficEvent.getTrafficIntensity(),
+							trafficEvent.getVehicleSpeedCalculated());
+					return average;
+				}, Materialized.with(Serdes.String(), new JsonSerde<>(Average.class)))
+				.mapValues(Average::average)
+				.toStream()
+				.print(Printed.toSysOut());
+	}
+`
 
-This interface will have an `input` channel which we will use to receive the messages from the Kafka topic.
-Create a new configuration file so we can specify which topic needs to be bound to the `input` channel.
-Just add `spring.cloud.stream.bindings.input.destination=traffic-data` to it so everything is configured and we can focus on our code again!
 
-Let's create a new method which will take a `TrafficEvent` as argument.
-By annotating this method with `@StreamListener(Sink.INPUT)` you're wiring the `input` channel to this method so that it can process every event that the application gets from the Kafka topic.
-To test this you can just log the `TrafficEvent` to stdout.
+
+
