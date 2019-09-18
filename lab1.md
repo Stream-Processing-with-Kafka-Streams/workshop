@@ -16,7 +16,7 @@ Let's start by adding the mandatory dependencies to the pom.xml file which is `s
 
 Next up we'll need to enable the binding from our application to the Kafka broker.
 Remember that our application is the source of the events, so we'll use the provided `org.springframework.cloud.stream.messaging.Source` interface towards Kafka.
-To enable this binding we'll have to use the `@EnableBinding` annotation which you can add to one of the configuration classes or the `TrafficDataEmitter` component.
+To enable this binding we'll have to use the `@EnableBinding(Source.class)` annotation which you can add to one of the configuration classes or the `TrafficDataEmitter` component.
 
 Because the exposed data is being refreshed every minute, we'll make use of the scheduling mechanism with a fixed rate of 60 seconds.
 Add following method to the `TrafficDataEmitter` component as a starting point.
