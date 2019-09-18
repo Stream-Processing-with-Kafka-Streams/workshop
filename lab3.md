@@ -49,7 +49,7 @@ The reason to set this property is that Spring Boot uses this as default for the
 ```
 spring.kafka.streams.application-id= # Kafka streams application.id property; default spring.application.name.
 ```
-For some extra reference to Spring Boot application properties you can check out this (page)[https://docs.spring.io/spring-boot/docs/current/reference/html/common-application-properties.html].
+For some extra reference to Spring Boot application properties you can check out this [page](https://docs.spring.io/spring-boot/docs/current/reference/html/common-application-properties.html).
 
 Alright, we're all set to create some code again!
 
